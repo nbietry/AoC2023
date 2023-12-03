@@ -20,31 +20,9 @@ class Day3 {
         data class SchemaNumber(var numValue: Int, var adjacentList: List<Pos>){
             fun isValid(engineSchema: List<CharArray>): Boolean{ return adjacentList.count{engineSchema[it.y][it.x] != '.'} > 0}
             override fun toString(): String {
-                return this.numValue.toString() + "=" + adjacentList.toString()
+                return this.numValue.toString()// + "=" + adjacentList.toString()
             }
         }
-    }
-
-    fun partOne(lines: List<String>): String {
-        //Read and store schema
-        val engineSchema = lines.map { it.toCharArray() }
-        //Extract numbers from schema
-        val numberList = lines.flatMap { extractNumbers(it) }
-        //Create object list to be analysed
-        val schemaNumberList = numberList.map {  SchemaNumber(it.toInt(), listOf<Pos>())}
-
-        var currentNumberCount = 0
-        for (i in engineSchema.indices){
-            var currentCursor = findNextNumberPosition(0,i, engineSchema)
-            while(currentCursor.x < engineSchema[0].size) {
-                schemaNumberList[currentNumberCount].adjacentList = getAdjacent(currentCursor, engineSchema)
-                currentCursor = findNextNumberPosition(currentCursor.x + schemaNumberList[currentNumberCount].numValue.toString().toCharArray().size ,i, engineSchema)
-                currentNumberCount++
-            }
-        }
-        println(schemaNumberList.toString())
-
-        return schemaNumberList.filter { it.isValid(engineSchema) }.sumOf { it.numValue }.toString()
     }
     private fun getAdjacent(currentPosition: Pos, engineSchema: List<CharArray>): List<Pos> {
         val listOfAdjacent = mutableListOf<Pos>()
@@ -78,7 +56,62 @@ class Day3 {
             currentX++
         return Pos(currentX, y)
     }
+    private fun getStarsPositions(engineSchema: List<CharArray>): List<Pos>{
+        val starPosList = mutableListOf<Pos>()
+        engineSchema.forEachIndexed{indexRow, line ->
+            line.forEachIndexed{indexCol, col ->
+                if(col == '*') starPosList.add(Pos(indexCol, indexRow))
+            }
+        }
+        return starPosList
+    }
+    private fun loadData(lines: List<String>): Pair<List<CharArray>, List<SchemaNumber>> {
+        //Read and store schema
+        val engineSchema = lines.map { it.toCharArray() }
+        //Extract numbers from schema
+        val numberList = lines.flatMap { extractNumbers(it) }
+        //Create object list to be analysed
+        val schemaNumberList = numberList.map { SchemaNumber(it.toInt(), listOf<Pos>()) }
+
+        var currentNumberCount = 0
+        for (i in engineSchema.indices) {
+            var currentCursor = findNextNumberPosition(0, i, engineSchema)
+            while (currentCursor.x < engineSchema[0].size) {
+                schemaNumberList[currentNumberCount].adjacentList = getAdjacent(currentCursor, engineSchema)
+                currentCursor = findNextNumberPosition(
+                    currentCursor.x + schemaNumberList[currentNumberCount].numValue.toString().toCharArray().size,
+                    i,
+                    engineSchema
+                )
+                currentNumberCount++
+            }
+        }
+        return Pair(engineSchema, schemaNumberList)
+    }
+
+    fun partOne(lines: List<String>): String {
+        val (engineSchema, schemaNumberList) = loadData(lines)
+        return schemaNumberList.filter { it.isValid(engineSchema) }.sumOf { it.numValue }.toString()
+    }
+
+
     fun partTwo(lines: List<String>): String {
-        return ""
+        //Read and store schema
+        val (engineSchema, schemaNumberList) = loadData(lines)
+        //Extract positions of all stars
+        val starsPosList = getStarsPositions(engineSchema)
+
+        var part2Solution = 0
+
+        for (position in starsPosList) {
+            //get Number having current star position as an adjacent
+            val adjacentNumbers = schemaNumberList.count { it.adjacentList.contains(position) }
+            //Test if there is exactly 2 if so multiply values and add to result
+            if (adjacentNumbers == 2) {
+                val filteredNumbers = schemaNumberList.filter { it.adjacentList.contains(position) }
+                part2Solution += filteredNumbers[0].numValue * filteredNumbers[1].numValue
+            }
+        }
+        return part2Solution.toString()
     }
 }
