@@ -8,8 +8,8 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun extractNumbers(input: String): MutableList<Long> {
-    val p: Pattern = Pattern.compile("-?\\d+")
+fun extractNumbers(input: String): List<Long> {
+    val p: Pattern = Pattern.compile("\\d+")
     val m: Matcher = p.matcher(input)
     val output: MutableList<Long> = ArrayList()
     while (m.find()) {
@@ -210,11 +210,11 @@ enum class Facing(val offset: Vec2) {
     WEST(Vec2(-1, 0)),
     NORTHWEST(Vec2(-1, 1));
 
-    fun left(): Facing = values()[(this.ordinal + 1) % values().size]
-    fun right(): Facing = values()[(this.ordinal - 1 + values().size) % values().size]
+    fun left(): Facing = entries[(this.ordinal + 1) % entries.size]
+    fun right(): Facing = entries[(this.ordinal - 1 + entries.size) % entries.size]
 
     fun reverse(): Facing {
-        return values()[(ordinal + 4) % values().size]
+        return entries[(ordinal + 4) % entries.size]
     }
 }
 fun extractOperation(input: String): (Long) -> Long{

@@ -46,54 +46,30 @@ class Day3 {
 
         return schemaNumberList.filter { it.isValid(engineSchema) }.sumOf { it.numValue }.toString()
     }
+    private fun getAdjacent(currentPosition: Pos, engineSchema: List<CharArray>): List<Pos> {
+        val listOfAdjacent = mutableListOf<Pos>()
 
-    private fun getAdjacent(currentPosition: Pos, engineSchema: List<CharArray>): List<Pos>{
-        var listOfAdjacent = listOf<Pos>()
-        //Check north
-        val northPos = Pos(currentPosition.x, currentPosition.y - 1)
-        if(engineSchema.getOrNull(northPos.y)?.getOrNull(northPos.x) != null )
-            if(!engineSchema[northPos.y][northPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + northPos
-        //Check south
-        val southPos = Pos(currentPosition.x, currentPosition.y + 1)
-        if(engineSchema.getOrNull(southPos.y)?.getOrNull(southPos.x) != null )
-            if(!engineSchema[southPos.y][southPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + southPos
+        val directions = arrayOf(
+            Pair(-1, -1), Pair(-1, 0), Pair(-1, 1),
+            Pair(0, -1),  Pair(0, 1),
+            Pair(1, -1), Pair(1, 0), Pair(1, 1)
+        )
 
-        //Check east
-        val eastPos = Pos(currentPosition.x + 1, currentPosition.y)
-        if(engineSchema.getOrNull(eastPos.y)?.getOrNull(eastPos.x) != null )
-            listOfAdjacent = if(engineSchema[eastPos.y][eastPos.x].isDigit())
-                listOfAdjacent + getAdjacent(eastPos, engineSchema)
-            else
-                listOfAdjacent + eastPos
-        //Check west
-        val westPos = Pos(currentPosition.x - 1, currentPosition.y)
-        if(engineSchema.getOrNull(westPos.y)?.getOrNull(westPos.x) != null )
-            if(!engineSchema[westPos.y][westPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + westPos
+        for ((dx, dy) in directions) {
+            val newX = currentPosition.x + dx
+            val newY = currentPosition.y + dy
 
-        //Check north-east
-        val northEastPos = Pos(currentPosition.x + 1, currentPosition.y - 1)
-        if(engineSchema.getOrNull(northEastPos.y)?.getOrNull(northEastPos.x) != null )
-            if(!engineSchema[northEastPos.y][northEastPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + northEastPos
-        //Check north-west
-        val northWestPos = Pos(currentPosition.x-1, currentPosition.y - 1)
-        if(engineSchema.getOrNull(northWestPos.y)?.getOrNull(northWestPos.x) != null )
-            if(!engineSchema[northWestPos.y][northWestPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + northWestPos
-        //Check south-east
-        val southEastPos = Pos(currentPosition.x+1, currentPosition.y + 1)
-        if(engineSchema.getOrNull(southEastPos.y)?.getOrNull(southEastPos.x) != null )
-            if(!engineSchema[southEastPos.y][southEastPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + southEastPos
-        //Check south-east
-        val southWestPos = Pos(currentPosition.x-1, currentPosition.y + 1)
-        if(engineSchema.getOrNull(southWestPos.y)?.getOrNull(southWestPos.x) != null )
-            if(!engineSchema[southWestPos.y][southWestPos.x].isDigit())
-                listOfAdjacent = listOfAdjacent + southWestPos
-
+            if (newX in engineSchema[0].indices && newY in engineSchema.indices) {
+                // If the right adjacent position is a digit, recursively get its adjacent positions
+                if (dx == 1 && dy == 0 && engineSchema[newY][newX].isDigit()) {
+                    listOfAdjacent.addAll(getAdjacent(Pos(newX, newY), engineSchema))
+                } else {
+                    if (!engineSchema[newY][newX].isDigit()) {
+                        listOfAdjacent.add(Pos(newX, newY))
+                    }
+                }
+            }
+        }
         return listOfAdjacent
     }
     private fun findNextNumberPosition(x: Int, y: Int, engineSchema: List<CharArray>): Pos {
@@ -102,8 +78,6 @@ class Day3 {
             currentX++
         return Pos(currentX, y)
     }
-
-
     fun partTwo(lines: List<String>): String {
         return ""
     }
