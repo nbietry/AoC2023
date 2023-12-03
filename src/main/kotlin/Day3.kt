@@ -102,13 +102,11 @@ class Day3 {
         val starsPosList = getStarsPositions(engineSchema)
 
         var part2Solution = 0
-
         for (position in starsPosList) {
-            //get Number having current star position as an adjacent
-            val adjacentNumbers = schemaNumberList.count { it.adjacentList.contains(position) }
+            //get numbers having current star position as an adjacent
+            val filteredNumbers = schemaNumberList.filter { it.adjacentList.contains(position) }
             //Test if there is exactly 2 if so multiply values and add to result
-            if (adjacentNumbers == 2) {
-                val filteredNumbers = schemaNumberList.filter { it.adjacentList.contains(position) }
+            if (filteredNumbers.count() == 2) {
                 part2Solution += filteredNumbers[0].numValue * filteredNumbers[1].numValue
             }
         }
