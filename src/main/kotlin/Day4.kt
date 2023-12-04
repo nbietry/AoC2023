@@ -26,8 +26,8 @@ class Day4{
         val data = lines.mapIndexed { indexLine, line ->
             Card(indexLine, extractIntNumbers(line.split('|').first()).drop(1), extractIntNumbers(line.split('|').last()))
         }
-        return data.sumOf { number ->
-            2.0.pow(number.calculateScore() - 1).toInt()
+        return data.sumOf { card ->
+            2.0.pow(card.calculateScore() - 1).toInt()
         }.toString()
 
     }
