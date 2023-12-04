@@ -17,6 +17,24 @@ fun extractNumbers(input: String): List<Long> {
     }
     return output
 }
+fun extractIntNumbers(input: String): List<Int> {
+    val p: Pattern = Pattern.compile("\\d+")
+    val m: Matcher = p.matcher(input)
+    val output: MutableList<Int> = ArrayList()
+    while (m.find()) {
+        output.add(m.group().toInt())
+    }
+    return output
+}
+fun extractNumbersWithSign(input: String): List<Long> {
+    val p: Pattern = Pattern.compile("-?\\d+")
+    val m: Matcher = p.matcher(input)
+    val output: MutableList<Long> = ArrayList()
+    while (m.find()) {
+        output.add(m.group().toLong())
+    }
+    return output
+}
 
 class Graph {
     private data class Vertex(val name: String) {
