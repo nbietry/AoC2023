@@ -6,7 +6,7 @@ fun main() {
     run part1@{
         val lines = File("inputs/inputDay5.txt").readText()
         println(day5.partOne(lines))
-
+        println(day5.partOneBis(lines))
     }
     run part2@{
         val lines = File("inputs/inputDay5.txt").readText()
@@ -42,12 +42,10 @@ class Day5 {
             }
 
         //Execute find range on the list for each seed number
-        return seedsList.minOf{
-            var initialValue = it
-            almanacMapList.mapIndexed{index, almanacMap ->
-                initialValue = findRange(initialValue, almanacMapList[index].mappingDic)
-                initialValue
-            }.last()
+        return seedsList.minOfOrNull { seed ->
+            almanacMapList.fold(seed) { acc, almanacMap ->
+                findRange(acc, almanacMap.mappingDic)
+            }
         }.toString()
     }
 
