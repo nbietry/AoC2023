@@ -6,7 +6,6 @@ fun main() {
     run part1@{
         val lines = File("inputs/inputDay5.txt").readText()
         println(day5.partOne(lines))
-        println(day5.partOneBis(lines))
     }
     run part2@{
         val lines = File("inputs/inputDay5.txt").readText()
