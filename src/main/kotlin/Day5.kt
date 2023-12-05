@@ -22,11 +22,7 @@ class Day5 {
                 Pair(name, list.split('\n').drop(1).map { extractNumbers(it) })
             }
     }
-    fun buildRangeMap(toNum: Long, fromNum: Long, rangeSize: Long): List<Pair<Long, Long>>{
-        return (0..<rangeSize).mapIndexed { index, _ ->
-            Pair(fromNum + index, toNum + index)
-        }
-    }
+
     fun findRange(seed: Long, ranges: List<Range>): Long{
         val matchingRange = ranges.find { seed >= it.start && seed <= it.end }
         return matchingRange?.let { seed - it.diff } ?: seed
@@ -46,7 +42,6 @@ class Day5 {
             }
 
         //Execute find range on the list for each seed number
-
         return seedsList.minOf{
             var initialValue = it
             almanacMapList.mapIndexed{index, almanacMap ->
