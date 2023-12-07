@@ -8,9 +8,9 @@ class Day7 {
             when {
                 hand.countCards()[0] >= 5 -> 6                                          //Five of a kind
                 hand.countCards()[0] >= 4 -> 5                                          //Four of a kind
-                hand.countCards()[0] + hand.countCards()[0] >= 5 -> 4//Full house
+                hand.countCards()[0] + hand.countCards()[1] >= 5 -> 4//Full house
                 hand.countCards()[0] >= 3 -> 3                                          //Three of a kind
-                hand.countCards()[0] + hand.countCards()[0] >= 4 -> 2 //Two pair
+                hand.countCards()[0] + hand.countCards()[1] >= 4 -> 2 //Two pair
                 hand.countCards()[0] >= 2 -> 1                                         //One pair
                 else ->  0                                                              //High card
             }
@@ -69,7 +69,6 @@ class Day7 {
             (hand.bid * (index+1)) + acc
         }
     }
-
 
 }
 
