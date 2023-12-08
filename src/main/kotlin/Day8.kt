@@ -24,7 +24,7 @@ class Day8(input: String){
         valueTransform = {it.groupValues[2] to it.groupValues[3]}
     )
     private val instructions = input.split('\n').first()
-    private val getStartingNodes = networkNodes.filter { it.key.toCharArray().last() == 'A' }
+    private val getStartingNodes = networkNodes.filter { it.key.endsWith('A') }
     private fun executeInstructions(startNode:String) = instructions.fold(startNode) { acc, instruction ->
         when (instruction) {
             'L' -> networkNodes[acc]!!.first
