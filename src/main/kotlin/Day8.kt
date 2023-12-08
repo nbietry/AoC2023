@@ -8,8 +8,8 @@ fun main() {
     println("Part2: " + Day8(linesPart2).partTwo())
 }
 
-class Day8(input: String){
-    companion object{
+class Day8(input: String) {
+    companion object {
         private val networkRegex = """(\w+) = \((\w+), (\w+)\)""".toRegex()
         private fun gcd(a: Long, b: Long): Long {
             return if (b == 0L) a else gcd(b, a % b)
@@ -19,19 +19,21 @@ class Day8(input: String){
             return a * b / gcd(a, b)
         }
     }
+
     private val networkNodes = networkRegex.findAll(input).associateBy(
-        keySelector = {it.groupValues[1]},
-        valueTransform = {it.groupValues[2] to it.groupValues[3]}
+        keySelector = { it.groupValues[1] },
+        valueTransform = { it.groupValues[2] to it.groupValues[3] }
     )
     private val instructions = input.split('\n').first()
     private val getStartingNodes = networkNodes.filter { it.key.endsWith('A') }
-    private fun executeInstructions(startNode:String) = instructions.fold(startNode) { acc, instruction ->
+    private fun executeInstructions(startNode: String) = instructions.fold(startNode) { acc, instruction ->
         when (instruction) {
             'L' -> networkNodes[acc]!!.first
             'R' -> networkNodes[acc]!!.second
             else -> throw IllegalArgumentException()
         }
     }
+
     fun partOne(): String {
         //First algo:
         var counter = 0
@@ -39,7 +41,7 @@ class Day8(input: String){
         do {
             startNode = executeInstructions(startNode)
             counter++
-        }while (startNode != "ZZZ")
+        } while (startNode != "ZZZ")
 
         //New algo with discovery on Part 2:
         val withPart2AlgoResult = generateSequence("AAA", ::executeInstructions).indexOf("ZZZ") * instructions.count()
@@ -47,6 +49,7 @@ class Day8(input: String){
 
         return (counter * instructions.count()).toString()
     }
+
     fun partTwo(): String {
 
         val startNodes = getStartingNodes.map { it.key }
@@ -55,7 +58,7 @@ class Day8(input: String){
         }.map { it.index.toLong() }
 
         //Get the lowest common denominator and multiply by instruction size
-        return (result.reduce{acc, i -> lcm(acc, i)} * instructions.count()).toString()
+        return (result.reduce { acc, i -> lcm(acc, i) } * instructions.count()).toString()
 
     }
 }
