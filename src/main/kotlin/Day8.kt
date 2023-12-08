@@ -50,9 +50,9 @@ class Day8(input: String){
     fun partTwo(): String {
 
         val startNodes = getStartingNodes.map { it.key }
-        val result = startNodes.asSequence().map { node ->
+        val result = startNodes.map { node ->
             generateSequence(node, ::executeInstructions).withIndex().first { (index, end) -> end.endsWith('Z') }
-        }.toList().map { it.index.toLong() }
+        }.map { it.index.toLong() }
 
         //Get the lowest common denominator and multiply by instruction size
         return (result.reduce{acc, i -> lcm(acc, i)} * instructions.count()).toString()
