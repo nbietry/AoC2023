@@ -3,9 +3,9 @@ import java.io.File
 fun main() {
 
     val linesPart1 = File("inputs/inputDay9.txt").readText()
-    val linesPart2 = File("inputs/inputDay9_example.txt").readText()
+    val linesPart2 = File("inputs/inputDay9.txt").readText()
     println("Part1: " + Day9(linesPart1).partOne())
-    //println("Part2: " + Day9(linesPart2).partTwo())
+    println("Part2: " + Day9(linesPart2).partTwo())
 }
 
 class Day9(val input: String) {
@@ -24,7 +24,8 @@ class Day9(val input: String) {
     }
 
     fun partTwo(): String {
-        TODO()
+        val entries = input.split('\n').map { it.split(' ').map { it.toLong() } }
+        return entries.sumOf { computeLine(it.reversed()) }.toString()
     }
 
 }
