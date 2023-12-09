@@ -4,10 +4,10 @@ import java.io.File
 
 class Day09Test {
     @Test
-    fun `should return 68 with given entry`() {
+    fun `should return 114 with given entry`() {
         val day9 = Day9(File("inputs/inputDay9_example.txt").readText())
         val got = day9.partOne()
-        val expected = "68"
+        val expected = "114"
         assertEquals(expected, got)
     }
 }
