@@ -33,7 +33,7 @@ class Day11(val input: String) {
         return abs(xDiff) + getEmptyColsCrossed * (expandSize-1) + abs(yDiff) + getEmptyRowsCrossed * (expandSize-1)
     }
     fun partOne(): String{
-        val galaxies = universe.getPairOfGalaxies()
+        galaxies = universe.getPairOfGalaxies()
         //Get pairs of galaxies with distances
         galaxyPairs = galaxies.flatMapIndexed { index, galaxy ->
             galaxies.subList(index + 1, galaxies.size).map { otherGalaxy ->
