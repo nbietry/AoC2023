@@ -2,7 +2,6 @@ package nico
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.pow
@@ -223,12 +222,12 @@ data class Point(val x: Double, val y: Double) {
 }
 enum class Facing(val offset: Vec2) {
 
-    NORTH(Vec2(0, 1)),
-    NORTHEAST(Vec2(1, 1)),
+    NORTH(Vec2(0, -1)),
+    NORTHEAST(Vec2(1, -1)),
     EAST(Vec2(1, 0)),
     SOUTHEAST(Vec2(1, -1)),
-    SOUTH(Vec2(0, -1)),
-    SOUTHWEST(Vec2(-1, -1)),
+    SOUTH(Vec2(0, 1)),
+    SOUTHWEST(Vec2(-1, 1)),
     WEST(Vec2(-1, 0)),
     NORTHWEST(Vec2(-1, 1));
 
@@ -249,16 +248,16 @@ fun extractOperation(input: String): (Long) -> Long{
     }
 }
 enum class CardinalFacing(val offset: Vec2){
-    NORTH(Vec2(0, 1)),
+    NORTH(Vec2(0, -1)),
     EAST(Vec2(1, 0)),
-    SOUTH(Vec2(0, -1)),
+    SOUTH(Vec2(0, 1)),
     WEST(Vec2(-1, 0));
 
-    fun left(): Facing = Facing.values()[(this.ordinal + 1) % Facing.values().size]
-    fun right(): Facing = Facing.values()[(this.ordinal - 1 + Facing.values().size) % Facing.values().size]
+    fun left(): Facing = Facing.entries[(this.ordinal + 1) % Facing.entries.size]
+    fun right(): Facing = Facing.entries[(this.ordinal - 1 + Facing.entries.size) % Facing.entries.size]
 
     fun reverse(): Facing {
-        return Facing.values()[(ordinal + 2) % Facing.values().size]
+        return Facing.entries[(ordinal + 2) % Facing.values().size]
     }
 }
 
