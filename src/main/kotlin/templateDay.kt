@@ -1,9 +1,19 @@
-import nico.*
-fun main() {
-    run part1@{
-    }
+import java.io.File
 
-    run part2@{
+fun main() {
+
+    val linesPart1 = File("inputs/inputDayxx_example.txt").readText()
+    val linesPart2 = File("inputs/inputDayxx_example.txt").readText()
+    println("Part1: " + templateDay(linesPart1).partOne())
+    println("Part2: " + templateDay(linesPart2).partTwo())
+}
+
+class templateDay(input: String) {
+    fun partOne():String{
+        TODO()
+    }
+    fun partTwo():String{
+        TODO()
     }
 
 }
