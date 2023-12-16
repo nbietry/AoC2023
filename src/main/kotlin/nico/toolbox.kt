@@ -203,7 +203,11 @@ data class Pos(val x:Int, val y:Int){
     }
     operator fun Pos.plus(move: Move): Pos = copy(x + move.dx, y + move.dy)
     operator fun Pos.minus(point2: Pos): Move = Move(x-point2.x, y-point2.y)
-
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Pos) return false
+        return x == other.x && y == other.y
+    }
 }
 data class Move(val dx:Int, val dy:Int)
 data class Point(val x: Double, val y: Double) {
