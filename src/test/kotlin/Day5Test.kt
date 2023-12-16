@@ -9,7 +9,7 @@ class Day05Test {
         val ranges = listOf(
             Range(start = 98, end = 100, diff = 48),
             Range(start=50, end=98, diff=-2))
-        val got = day5.findRange(99L, ranges)
+        val got = day5.processRangeMapping(99L, ranges)
         val expected = 51L
         assertEquals(expected, got)
     }
@@ -20,7 +20,7 @@ class Day05Test {
         val ranges = listOf(
             Range(start = 98, end = 100, diff = 48),
             Range(start=50, end=98, diff=-2))
-        val got = day5.findRange(40L, ranges)
+        val got = day5.processRangeMapping(40L, ranges)
         val expected = 40L
         assertEquals(expected, got)
     }
