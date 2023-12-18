@@ -1,4 +1,3 @@
-
 import nico.CardinalFacing
 import nico.CardinalFacing.*
 import nico.Vec2
@@ -6,7 +5,7 @@ import java.io.File
 
 fun main() {
 
-    val linesPart1 = File("inputs/inputDay16_example.txt").readText()
+    val linesPart1 = File("inputs/inputDay16.txt").readText()
     val linesPart2 = File("inputs/inputDay16_example.txt").readText()
     println("Part1: " + Day16(linesPart1).partOne())
     println("Part2: " + Day16(linesPart2).partTwo())
@@ -14,7 +13,10 @@ fun main() {
 
 class Day16(input: String) {
     private val contraption = input.lines()
-    private val visitedNode = mutableListOf<Vec2>()
+    private val visitedNode = mutableListOf<Beam>()
+
+    data class Beam(val position: Vec2, val direction: CardinalFacing)
+
     companion object {
         private val directionsMap = mapOf(
             NORTH to '/' to listOf(EAST),
@@ -29,26 +31,46 @@ class Day16(input: String) {
             EAST to '/' to listOf(NORTH),
             EAST to '|' to listOf(NORTH, SOUTH),
             EAST to '\\' to listOf(SOUTH)
-        )}
-        private fun getNextPosition(currentPos: Vec2, direction: CardinalFacing): List<Pair<Vec2, CardinalFacing>>{
-            val nextPositions = directionsMap[direction to contraption[currentPos.y][currentPos.x]] ?: listOf(direction)
-
-            return nextPositions
-                .map { Pair(currentPos.plus(it), it)}
-                .filter {  it.first.x in contraption[0].indices && it.first.y in contraption.indices }
+        )
+        fun renderContraptionWithVisited(contraption: List<String>, visitedNodes: List<Vec2>) {
+            for ((y, row) in contraption.withIndex()) {
+                val newRow = StringBuilder(row)
+                for (node in visitedNodes) {
+                    if (node.y == y && node.x in row.indices) {
+                        newRow[node.x] = '#' // Symbol representing visited nodes
+                    }
+                }
+                println(newRow)
+            }
         }
+    }
+
+    private fun getNextPosition(beam: Beam): List<Beam> {
+        val nextPositions =
+            directionsMap[beam.direction to contraption[beam.position.y][beam.position.x]] ?: listOf(beam.direction)
+
+        return nextPositions.map { Beam(beam.position.plus(it), it) }
+            .filter { it.position.x in contraption[0].indices && it.position.y in contraption.indices }
+    }
+
     fun partOne(): Int {
-        val beamList = ArrayDeque<Pair<Vec2, CardinalFacing>>()
-        beamList.add(Pair(Vec2(0,0), EAST))
-        visitedNode.add(Vec2(0,0))
+        val beamList = ArrayDeque<Beam>()
+        val startBeam = Beam(Vec2(0, 0), EAST)
+        beamList.add(startBeam)
+        visitedNode.add(startBeam)
 
-        while(beamList.isNotEmpty()){
-            val (currentBeam, dir) = beamList.removeFirst()
-            beamList.addAll(getNextPosition(currentBeam, dir))
-            visitedNode.addAll(beamList.map { it.first })
+        while (beamList.isNotEmpty()) {
+            val currentBeam = beamList.removeLast()
+            for (nextBeam in getNextPosition(currentBeam)) {
+                if (nextBeam !in visitedNode) {
+                    beamList.add(nextBeam)
+                    visitedNode.add(nextBeam)
+                }
+            }
         }
-        println(visitedNode)
-        return visitedNode.size
+        //renderContraptionWithVisited(contraption, visitedNode.map { it.position })
+
+        return visitedNode.map { it.position }.toSet().count()
     }
 
     fun partTwo(): Int {
