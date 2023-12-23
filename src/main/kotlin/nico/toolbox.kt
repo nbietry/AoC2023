@@ -220,6 +220,13 @@ data class Point(val x: Double, val y: Double) {
         return "(x:$x,y:$y)"
     }
 }
+
+enum class Direction(val vector: Vec2) {
+    R(Vec2(1, 0)),
+    D(Vec2(0, 1)),
+    L(Vec2(-1, 0)),
+    U(Vec2(0, -1))
+}
 enum class Facing(val offset: Vec2) {
 
     NORTH(Vec2(0, -1)),
@@ -269,6 +276,7 @@ data class Vec2(val x: Int, val y: Int) {
 
     operator fun minus(dir: Vec2) = Vec2(x - dir.x, y - dir.y)
     operator fun minus(dir: Facing) = Vec2(x - dir.offset.x, y - dir.offset.y)
+    operator fun times(int: Int) = Vec2(x*int, y*int)
 
     // Includes the center point
     fun inclusiveVonNeumanNeighborhood(): List<Vec2> = listOf(
@@ -303,7 +311,60 @@ data class Vec2(val x: Int, val y: Int) {
     override fun toString(): String {
         return "($x, $y)"
     }
+
+
 }
+
+data class Vec2L(val x: Int, val y: Int) {
+
+    operator fun plus(dir: Vec2L) = Vec2L(x + dir.x, y + dir.y)
+    operator fun plus(dir: Facing) = Vec2L(x + dir.offset.x, y + dir.offset.y)
+    operator fun plus(dir: CardinalFacing) = Vec2L(x + dir.offset.x, y + dir.offset.y)
+
+    operator fun minus(dir: Vec2L) = Vec2L(x - dir.x, y - dir.y)
+    operator fun minus(dir: Facing) = Vec2L(x - dir.offset.x, y - dir.offset.y)
+    operator fun times(int: Int) = Vec2L(x*int, y*int)
+
+    // Includes the center point
+    fun inclusiveVonNeumanNeighborhood(): List<Vec2L> = listOf(
+        this,
+        Vec2L(x, y + 1),
+        Vec2L(x + 1, y),
+        Vec2L(x, y - 1),
+        Vec2L(x - 1, y)
+    )
+
+    // Excludes center point
+    fun vonNeumanNeighborhood(): List<Vec2> = listOf(
+        Vec2(x, y + 1),
+        Vec2(x + 1, y),
+        Vec2(x, y - 1),
+        Vec2(x - 1, y)
+    )
+
+    // Includes the center point
+    fun inclusiveMooreNeighborhood(): List<Vec2> = List(9) { index ->
+        Vec2(index / 3 - 1 + x, index % 3 - 1 + y)
+    }
+
+    // Excludes center point
+    fun mooreNeighborhood(): List<Vec2> = List(8) { index ->
+        if (index >= 4)
+            Vec2((index + 1) % 3 - 1 + x, (index + 1) / 3 - 1 + y)
+        else
+            Vec2(index % 3 - 1 + x, index / 3 - 1 + y)
+    }
+
+    override fun toString(): String {
+        return "($x, $y)"
+    }
+
+
+}
+
+fun shoelaceArea(points: List<Vec2>): Long = points.zipWithNext { a, b -> a.x.toLong() * b.y.toLong() - a.y.toLong() * b.x.toLong() }.sum() / 2
+fun perimeter(polygon: List<Vec2>): Long = polygon.sumOf { abs(it.x.toLong()) + abs(it.y) }
+
 
 fun getManhattanDistance(pos1: Vec2, pos2: Vec2): Int = getManhattanDistance(pos1.x, pos1.y, pos2.x, pos2.y)
 fun getManhattanDistance(x1: Int, y1: Int, x2: Int, y2: Int): Int = (abs(x1 - x2) + abs(y1 - y2))
